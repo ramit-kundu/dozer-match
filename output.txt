@@ -1,0 +1,78 @@
+
+	<div class="card" data-businessunit="BCP" data-brand="Caterpillar" data-family="Dozers" data-productid="105060" data-modelid="71562" data-category="Equipment/Dozers/Small Dozers" data-msrp="" data-currency="">
+		<div class="card-inner" style="height: 515px;">
+      <a class="card-inner__link" href="/en_US/products/new/equipment/dozers/small-dozers/105060.html" onmousedown="productClickForDL(event)">
+      
+      <span class="value family">Small Dozers</span>
+			<h2 style="height: 28px;">D1</h2>
+			<figure>
+        <img class=" lazyloaded" data-src="https://s7d2.scene7.com/is/image/Caterpillar/CM20200423-2bfc1-01ee1?$cc-s$" alt="D1" src="https://s7d2.scene7.com/is/image/Caterpillar/CM20200423-2bfc1-01ee1?$cc-s$"/>
+			</figure>
+            
+			<div class="card-text" style="height: 144px;">
+                <dl>
+                  
+                    <dt class="value spec">Engine Model</dt>
+
+                    
+                        
+                            <dd class="value spec-value unit unit-us">Cat C3.6</dd>
+                        
+                    
+                        
+                            <dd class="value spec-value unit unit-metric unit-hidden">Cat C3.6</dd>
+                        
+                    
+
+                  
+                    <dt class="value spec">Power - Net</dt>
+
+                    
+                        
+                            <dd class="value spec-value unit unit-us">80 HP</dd>
+                        
+                    
+                        
+                            <dd class="value spec-value unit unit-metric unit-hidden">59.7 kW</dd>
+                        
+                    
+
+                  
+                    <dt class="value spec">Operating Weight</dt>
+
+                    
+                        
+                            <dd class="value spec-value unit unit-us">17855 lb</dd>
+                        
+                    
+                        
+                            <dd class="value spec-value unit unit-metric unit-hidden">8099 kg</dd>
+                        
+                    
+
+                  
+                </dl>            
+
+                
+                
+                 
+
+			</div>
+            
+    </a>
+
+			<div class="card-footer">
+				<a href="/en_US/products/new/equipment/dozers/small-dozers/105060.html" class="button button-primary" onclick="productClickForDL(event)">View</a>
+                
+                  <form action="" class="form" data-gtm-vis-first-on-screen-539051_3537="4299" data-gtm-vis-total-visible-time-539051_3537="100" data-gtm-vis-has-fired-539051_3537="1" data-gtm-vis-first-on-screen-539051_503="4305" data-gtm-vis-total-visible-time-539051_503="100" data-gtm-vis-has-fired-539051_503="1">
+                    <input type="hidden" id="catalog-compare-url" value="/content/catdotcom/en_US/products/new/equipment/dozers/..//products/product-comparison.html?productId=105060&amp;type=new"/>
+                    <div class="control">
+                      <input type="checkbox" id="model-name-105060" name="model-name-105060"/>
+                      <label for="model-name-105060">Compare models</label>
+                    </div>
+                  </form>
+                  <!--a href="/content/catdotcom/en_US/products/new/equipment/dozers/..//products/product-comparison.html?productId=105060&amp;type=new" class="cat-follow button button-link">Compare models</a-->
+                
+			</div>
+		</div>
+	</div>

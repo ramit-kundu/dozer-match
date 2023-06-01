@@ -1,8 +1,6 @@
 package catscraper
 
 import (
-	"fmt"
-	"io/ioutil"
 	"time"
 
 	"github.com/go-rod/rod"
@@ -35,11 +33,5 @@ func Crawl() {
 		panic(err)
 	}
 
-	err = ioutil.WriteFile("output.txt", []byte(html), 0644)
-	if err != nil {
-		fmt.Println("Error writing file:", err)
-		return
-	}
-
-	fmt.Println("String successfully stored in file.")
+	ParseToChunk(html)
 }
