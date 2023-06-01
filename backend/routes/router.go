@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	catscraper "github.com/kundu-ramit/dozer_match/domain/scraper/cat_scraper"
 )
 
 func SetupRouter() *gin.Engine {
@@ -19,6 +20,7 @@ func SetupRouter() *gin.Engine {
 	router.GET("/users", func(c *gin.Context) {
 		// Handle GET request to /users
 		c.JSON(200, gin.H{"message": "Get all users"})
+		catscraper.Crawl()
 	})
 
 	router.POST("/users", func(c *gin.Context) {

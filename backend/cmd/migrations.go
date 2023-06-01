@@ -1,28 +1,45 @@
 package cmd
 
 import (
+	"context"
+	"fmt"
+	"log"
+
 	"github.com/go-gormigrate/gormigrate/v2"
+	"github.com/google/uuid"
+	"github.com/kundu-ramit/dozer_match/domain/entity"
 	"gorm.io/gorm"
 )
 
-func GenerateMigration(db *gorm.DB) {
-	m := gormigrate.New(db, gormigrate.DefaultOptions, []*gormigrate.Migration{
-		// your migrations here
-	})
+func ApplyMigration(ctx context.Context, db *gorm.DB) {
 
-	m.InitSchema(func(tx *gorm.DB) error {
-		err := tx.AutoMigrate(
-			&Organization{},
-			&User{},
-		)
-		if err != nil {
-			return err
-		}
+	m := gormigrate.New(db, gormigrate.DefaultOptions, []*gormigrate.Migration{{
+		// create `dozers` table
+		ID: "201608301400_bull_dozers",
+		Migrate: func(tx *gorm.DB) error {
 
-		if err := tx.Exec("ALTER TABLE users ADD CONSTRAINT fk_users_organizations FOREIGN KEY (organization_id) REFERENCES organizations (id)").Error; err != nil {
-			return err
-		}
-		// all other constraints, indexes, etc...
-		return nil
-	})
+			fmt.Println("Migrating 201608301400 create table")
+
+			type bullDozer struct {
+				ID              uuid.UUID            `gorm:"type:uuid;primaryKey;"`
+				Make            string               `gorm:"column:make;"`
+				Model           string               `gorm:"column:model;"`
+				Picture         string               `gorm:"column:picture;"`
+				Category        entity.DozerCategory `gorm:"column:category;"`
+				EngineHP        string               `gorm:"column:engine_hp;"`
+				OperatingWeight int64                `gorm:"column:operating_weight;"`
+			}
+			// it's a good pratice to copy the struct inside the function,
+			// so side effects are prevented if the original struct changes during the time
+			return tx.Migrator().CreateTable(&bullDozer{})
+		},
+		Rollback: func(tx *gorm.DB) error {
+			return tx.Migrator().DropTable("bull_dozers")
+		},
+	}})
+
+	if err := m.Migrate(); err != nil {
+		panic(err)
+	}
+	log.Println("Migration did run successfully")
 }

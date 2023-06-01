@@ -1,9 +1,12 @@
 package main
 
 import (
+	"context"
 	"log"
 	"os"
 
+	"github.com/kundu-ramit/dozer_match/cmd"
+	"github.com/kundu-ramit/dozer_match/database"
 	"github.com/kundu-ramit/dozer_match/routes"
 )
 
@@ -22,12 +25,24 @@ func main() {
 		startCron()
 	case "server":
 		startServer()
+	case "migration":
+		applyMigration()
 	default:
 		log.Fatal("Invalid command:", args[0])
 	}
 }
 
 func startCron() {
+}
+
+func applyMigration() {
+
+	db, err := database.InitializeDatabase()
+	if err != nil {
+		panic(err)
+	}
+	cmd.ApplyMigration(context.TODO(), db)
+
 }
 
 func startServer() {
