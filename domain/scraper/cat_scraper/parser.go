@@ -31,5 +31,6 @@ func ParseToChunk(html string) {
 		return
 	}
 
+	GptParser(cardWrappers[0])
 	fmt.Println("String successfully stored in file.")
 }
