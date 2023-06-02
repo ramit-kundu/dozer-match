@@ -49,7 +49,7 @@ func (c modularizer) ParseModule(ctx context.Context, html string) ([]*entity.Bu
 	})
 
 	for i := 0; i < len(cardWrappers); i++ {
-		dozer, err := c.parser.Parse(ctx, cardWrappers[0])
+		dozer, err := c.parser.Parse(ctx, cardWrappers[i])
 		if err != nil {
 			fmt.Println(err)
 			continue
