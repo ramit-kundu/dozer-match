@@ -1,45 +1,71 @@
 package controllers
 
 import (
-	"encoding/json"
+	"fmt"
+	"math/rand"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/kundu-ramit/dozer_match/domain/entity"
 	"github.com/kundu-ramit/dozer_match/service"
 )
 
-type ScraperController struct {
+type ScraperController interface {
+	Get(c *gin.Context)
+	StartScrape(c *gin.Context)
+	Clear(c *gin.Context)
+}
+
+type scraperController struct {
 	service service.DozerService
 }
 
-func (sc *ScraperController) Get(c *gin.Context) {
-
-	c.JSON(http.StatusOK, scrapeResults)
+func NewScraperController() ScraperController {
+	return &scraperController{
+		service: service.NewDozerService(),
+	}
 }
 
-func (sc *ScraperController) StartScrape(c *gin.Context) {
+func (sc *scraperController) Get(c *gin.Context) {
+	scrapeId := c.Param("id")
 
-	resp, err := http.Get(serviceURL)
+	var dozers []entity.BullDozer
+	var err error
+	if scrapeId == "" {
+		dozers, err = sc.service.FetchLatest(c)
+	} else {
+		dozers, err = sc.service.FetchById(c, scrapeId)
+	}
 	if err != nil {
-		// Handle the error appropriately
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to start scrape"})
+		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
+	c.JSON(http.StatusOK, dozers)
+}
 
-	var response struct {
-		Success bool `json:"success"`
-	}
-	err = json.NewDecoder(resp.Body).Decode(&response)
+func (sc *scraperController) StartScrape(c *gin.Context) {
+	scrapeIndex := sc.generateScrapeIndex()
+	c.JSON(http.StatusOK, `Scrape started : scrapeIndex is`+scrapeIndex)
+
+	sc.service.StartScrape(c, scrapeIndex)
+}
+
+func (sc *scraperController) Clear(c *gin.Context) {
+
+	err := sc.service.Delete(c)
 	if err != nil {
-		// Handle the error appropriately
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to parse service response"})
+		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
+	c.JSON(http.StatusOK, `All scrapes have been deleted`)
+}
 
-	if !response.Success {
-		// Handle the unsuccessful response from the service
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Scrape service returned an error"})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"message": "Scraping started successfully"})
+func (sc *scraperController) generateScrapeIndex() string {
+	rand.Seed(time.Now().UnixNano())
+	min := 1000000000
+	max := 9999999999
+	scrapeIndex := rand.Intn(max-min+1) + min
+
+	return fmt.Sprintf("%010d", scrapeIndex)
 }

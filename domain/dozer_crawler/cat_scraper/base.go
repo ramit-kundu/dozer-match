@@ -8,8 +8,8 @@ import (
 
 	"github.com/go-rod/rod"
 	"github.com/go-rod/rod/lib/launcher"
+	scraper "github.com/kundu-ramit/dozer_match/domain/dozer_crawler"
 	"github.com/kundu-ramit/dozer_match/domain/entity"
-	"github.com/kundu-ramit/dozer_match/domain/scraper"
 )
 
 type catScraper struct {

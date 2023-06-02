@@ -11,6 +11,7 @@ import (
 type BullDozerRepository interface {
 	BulkCreate(ctx context.Context, dozers []entity.BullDozer) error
 	Fetch(ctx context.Context, scrapeIndex string) ([]entity.BullDozer, error)
+	Delete(ctx context.Context) error
 }
 
 type bullDozerRepository struct {
@@ -38,4 +39,12 @@ func (r bullDozerRepository) Fetch(ctx context.Context, scrapeIndex string) ([]e
 		return nil, err
 	}
 	return dozers, nil
+}
+
+func (r bullDozerRepository) Delete(ctx context.Context) error {
+	err := r.db.Delete(&entity.BullDozer{}).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
