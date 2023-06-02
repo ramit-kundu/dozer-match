@@ -6,6 +6,7 @@ import (
 
 	"github.com/kundu-ramit/dozer_match/cmd"
 	"github.com/kundu-ramit/dozer_match/infra/database"
+	"github.com/kundu-ramit/dozer_match/infra/redis"
 
 	"github.com/kundu-ramit/dozer_match/routes"
 )
@@ -33,6 +34,8 @@ func main() {
 func applyMigration() {
 
 	db := database.Initialize()
+	redis.Initialize()
+
 	cmd.ApplyMigration(db)
 
 }

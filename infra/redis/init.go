@@ -22,3 +22,5 @@ func Initialize() *redis.Client {
 	fmt.Println("Connected to Redis:", pong)
 	return client
 }
+
+//Design Decision: not creating global variables cause they create trouble during api tests.

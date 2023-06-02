@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"os"
 
 	"gorm.io/driver/postgres"
@@ -13,5 +14,8 @@ func Initialize() *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println("connected to postgres")
 	return db
 }
+
+//Design Decision: not creating global variables cause they create trouble during api tests.

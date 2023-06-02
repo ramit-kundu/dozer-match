@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres
+    restart: always
+    ports:
+      - 2000:5432
+    environment:
+      POSTGRES_USER: root1
+      POSTGRES_PASSWORD: sample
+      POSTGRES_DB: bb
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - 5000:6379
+
+volumes:
+  postgres-data:

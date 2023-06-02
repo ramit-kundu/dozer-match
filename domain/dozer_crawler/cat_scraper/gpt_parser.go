@@ -20,6 +20,8 @@ func NewGptParser() scraper.Parser {
 }
 
 func (g gptParser) Parse(ctx context.Context, html string) (*entity.BullDozer, error) {
+
+	fmt.Println("USING GPT")
 	url := "https://api.openai.com/v1/chat/completions"
 
 	// Define the request payload

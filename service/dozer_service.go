@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	"os"
 	"time"
 
@@ -70,22 +71,27 @@ func (d dozerService) FetchLatest(ctx context.Context) ([]entity.BullDozer, erro
 
 func (d dozerService) StartScrape(ctx context.Context, scrapeIndex string) error {
 
-	res, _ := d.cache.Get("https://www.cat.com")
+	res, _ := d.cache.Get("catdotcom")
 	if res == "in_progress" {
+		fmt.Println("scrape is in progress")
 		return errors.New("scrape is in progress")
 	}
 
-	d.cache.Set("https://www.cat.com", "in_progress", time.Hour)
+	fmt.Println("COOL")
+
+	d.cache.Set("catdotcom", "in_progress", time.Hour)
 	d.cache.Set(scrapeIndex, "in_progress", time.Hour)
 
 	dozers, err := d.scraper.ScrapePage(ctx)
+	fmt.Println(dozers)
 
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 	d.repo.BulkCreate(ctx, dozers)
 
-	d.cache.Remove("https://www.cat.com")
+	d.cache.Remove("catdotcom")
 	d.cache.Remove(scrapeIndex)
 	d.cache.Set("cat_latest_index", scrapeIndex, 0)
 
