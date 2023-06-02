@@ -64,7 +64,7 @@
 			<div class="card-footer">
 				<a href="/en_US/products/new/equipment/dozers/small-dozers/105060.html" class="button button-primary" onclick="productClickForDL(event)">View</a>
                 
-                  <form action="" class="form" data-gtm-vis-first-on-screen-539051_3537="4442" data-gtm-vis-total-visible-time-539051_3537="100" data-gtm-vis-has-fired-539051_3537="1" data-gtm-vis-first-on-screen-539051_503="4448" data-gtm-vis-total-visible-time-539051_503="100" data-gtm-vis-has-fired-539051_503="1">
+                  <form action="" class="form" data-gtm-vis-first-on-screen-539051_3537="4181" data-gtm-vis-total-visible-time-539051_3537="100" data-gtm-vis-has-fired-539051_3537="1" data-gtm-vis-first-on-screen-539051_503="4189" data-gtm-vis-total-visible-time-539051_503="100" data-gtm-vis-has-fired-539051_503="1">
                     <input type="hidden" id="catalog-compare-url" value="/content/catdotcom/en_US/products/new/equipment/dozers/..//products/product-comparison.html?productId=105060&amp;type=new"/>
                     <div class="control">
                       <input type="checkbox" id="model-name-105060" name="model-name-105060"/>

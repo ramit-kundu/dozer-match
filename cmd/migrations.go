@@ -7,7 +7,6 @@ import (
 
 	"github.com/go-gormigrate/gormigrate/v2"
 	"github.com/google/uuid"
-	"github.com/kundu-ramit/dozer_match/domain/entity"
 	"gorm.io/gorm"
 )
 
@@ -21,13 +20,13 @@ func ApplyMigration(ctx context.Context, db *gorm.DB) {
 			fmt.Println("Migrating 201608301400 create table")
 
 			type bullDozer struct {
-				ID              uuid.UUID            `gorm:"type:uuid;primaryKey;"`
-				Make            string               `gorm:"column:make;"`
-				Model           string               `gorm:"column:model;"`
-				Picture         string               `gorm:"column:picture;"`
-				Category        entity.DozerCategory `gorm:"column:category;"`
-				EngineHP        string               `gorm:"column:engine_hp;"`
-				OperatingWeight int64                `gorm:"column:operating_weight;"`
+				ID              uuid.UUID `gorm:"type:uuid;primaryKey;"`
+				Make            string    `gorm:"column:make;"`
+				Model           string    `gorm:"column:model;"`
+				Picture         string    `gorm:"column:picture;"`
+				Category        string    `gorm:"column:category;"` //better as enum
+				EngineHP        string    `gorm:"column:engine_hp;"`
+				OperatingWeight int64     `gorm:"column:operating_weight;"`
 			}
 			// it's a good pratice to copy the struct inside the function,
 			// so side effects are prevented if the original struct changes during the time

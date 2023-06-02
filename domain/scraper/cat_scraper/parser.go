@@ -2,6 +2,7 @@ package catscraper
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"strings"
@@ -32,6 +33,8 @@ func ParseToChunk(ctx context.Context, html string) {
 		return
 	}
 
-	GptParser(ctx, cardWrappers[0])
+	str, _ := GptParser(ctx, cardWrappers[0])
+	res, _ := json.Marshal(str)
+	fmt.Println(string(res))
 	fmt.Println("String successfully stored in file.")
 }

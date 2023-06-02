@@ -34,5 +34,5 @@ func Crawl(ctx context.Context) {
 		panic(err)
 	}
 
-	ParseToChunk(html)
+	ParseToChunk(ctx, html)
 }

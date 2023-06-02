@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/kundu-ramit/dozer_match/domain/entity"
 )
@@ -26,6 +28,28 @@ func GptParser(ctx context.Context, html string) (*entity.BullDozer, error) {
 			Content string `json:"content"`
 		}{
 			{
+				Role: "system",
+				Content: `You are a helpful assistant that inputs a html snippet 
+				which is scraped from a website of bulldozers and from that html snippet 
+				finds out 
+				○ Make ( Brand eg Caterpillar)
+				○ Model ( Model No )
+				○ Picture (check for link)
+				○ Category (i.e., Small Dozer, Medium Dozer, Large Dozer, Wheel Dozer)
+				○ Engine HP 
+				○ Operating Weight (in lbs or kgs)
+				of the bulldozer. You will only respond with a json in this format
+				{
+					"Make": "Caterpillar",
+					"Model": "D1",
+					"Picture": "https://s7d2.scene7.com/is/image/Caterpillar/CM20200423-2bfc1-01ee1?$cc-s$",
+					"Category": "Small Dozers",
+					"EngineHP": "80 HP",
+					"OperatingWeight": "17855 lb"
+				  } If youre unable to find any component in json plz put empty string and not null
+			 `,
+			},
+			{
 				Role: "user",
 				Content: `From the below html snippet find out 
 				○ Make ( Brand eg Caterpillar)
@@ -40,8 +64,8 @@ func GptParser(ctx context.Context, html string) (*entity.BullDozer, error) {
 					"Model": "D1",
 					"Picture": "https://s7d2.scene7.com/is/image/Caterpillar/CM20200423-2bfc1-01ee1?$cc-s$",
 					"Category": "Small Dozers",
-					"Engine HP": "80 HP",
-					"Operating Weight": "17855 lb"
+					"EngineHP": "80 HP",
+					"OperatingWeight": "17855 lb"
 				  }
 				  
 				  html is : ` + html,
@@ -79,7 +103,16 @@ func GptParser(ctx context.Context, html string) (*entity.BullDozer, error) {
 	if err != nil {
 		return nil, err
 	}
-	apiRes := result["choices"].([]map[string]interface{})[0]["message"].(map[string]map[string]interface{})["content"]
+	choices := result["choices"].([]interface{})
+	fmt.Println(choices...)
+	message := choices[0].(map[string]interface{})["message"]
+	fmt.Println(message)
+	content := message.(map[string]interface{})["content"].(string)
+	fmt.Println(content)
+	apiRes := make(map[string]interface{})
+	json.Unmarshal([]byte(content), &apiRes)
+
+	opWt, _ := strconv.ParseInt(apiRes["OperatingWeight"].(string), 10, 64)
 
 	return &entity.BullDozer{
 		Make:            apiRes["Make"].(string),
@@ -87,7 +120,7 @@ func GptParser(ctx context.Context, html string) (*entity.BullDozer, error) {
 		Picture:         apiRes["Picture"].(string),
 		Category:        apiRes["Category"].(string),
 		EngineHP:        apiRes["EngineHP"].(string),
-		OperatingWeight: apiRes["OperatingWeight"].(int64),
+		OperatingWeight: opWt,
 	}, nil
 
 }
