@@ -9,23 +9,20 @@ import (
 	"github.com/go-rod/rod"
 	"github.com/go-rod/rod/lib/launcher"
 	"github.com/kundu-ramit/dozer_match/domain/entity"
+	"github.com/kundu-ramit/dozer_match/domain/scraper"
 )
-
-type CatScraper interface {
-	ScrapePage(ctx context.Context) ([]entity.BullDozer, error)
-}
 
 type catScraper struct {
 	parser Modularizer
 }
 
-func NewCatScraper() CatScraper {
+func NewCatScraper() scraper.Scraper {
 	return catScraper{
 		parser: NewModularizer(false),
 	}
 }
 
-func NewCatScraperGPT() CatScraper {
+func NewCatScraperGPT() scraper.Scraper {
 	return catScraper{
 		parser: NewModularizer(true),
 	}
