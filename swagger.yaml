@@ -1,0 +1,39 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: Go Scrape API
+basePath: /scrape
+schemes:
+  - http
+host: localhost:8002
+paths:
+  /:
+    post:
+      summary: Scrape data
+      description: Endpoint to initiate scraping
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successful operation
+      tags:
+        - Scrape
+  /{id}:
+    get:
+      summary: Get scraped data by ID
+      description: Endpoint to retrieve scraped data by ID
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of the scraped data
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Successful operation
+        404:
+          description: Scrape data not found
+      tags:
+        - Scrape
