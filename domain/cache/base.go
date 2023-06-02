@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/go-redis/redis"
@@ -24,6 +25,8 @@ func NewCache() Cache {
 }
 
 func (c cache) Set(key string, value string, expiration time.Duration) error {
+	fmt.Println("redis : setting key" + key + "with value" + value)
+
 	err := c.client.Set(key, value, expiration).Err()
 	if err != nil {
 		return err
@@ -32,6 +35,8 @@ func (c cache) Set(key string, value string, expiration time.Duration) error {
 }
 
 func (c cache) Get(key string) (string, error) {
+	fmt.Println("redis : getting key" + key)
+
 	value, err := c.client.Get(key).Result()
 	if err == redis.Nil {
 		return "", nil
@@ -43,5 +48,6 @@ func (c cache) Get(key string) (string, error) {
 }
 
 func (c cache) Remove(key string) {
+	fmt.Println("redis : deleting key" + key)
 	c.client.Del(key)
 }

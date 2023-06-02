@@ -34,14 +34,14 @@ func main() {
 func applyMigration() {
 
 	db := database.Initialize()
-	redis.Initialize()
-
 	cmd.ApplyMigration(db)
 
 }
 
 func startServer() {
 
+	database.Initialize()
+	redis.Initialize()
 	r := routes.SetupRouter()
 	r.Run(":8002")
 }

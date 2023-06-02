@@ -47,6 +47,13 @@ func (sc *scraperController) Get(c *gin.Context) {
 
 func (sc *scraperController) StartScrape(c *gin.Context) {
 	scrapeIndex := sc.generateScrapeIndex()
+
+	err := sc.service.CheckExistingScrape(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
 	c.JSON(http.StatusOK, `Scrape started : scrapeIndex is : `+scrapeIndex)
 	sc.service.StartScrape(context.TODO(), scrapeIndex)
 }

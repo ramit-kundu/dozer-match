@@ -18,6 +18,7 @@ type DozerService interface {
 	FetchById(ctx context.Context, scrapeIndex string) ([]entity.BullDozer, error)
 	FetchLatest(ctx context.Context) ([]entity.BullDozer, error)
 	StartScrape(ctx context.Context, scrapeIndex string) error
+	CheckExistingScrape(ctx context.Context) error
 	Delete(ctx context.Context) error
 }
 
@@ -69,15 +70,16 @@ func (d dozerService) FetchLatest(ctx context.Context) ([]entity.BullDozer, erro
 	return dozers, nil
 }
 
-func (d dozerService) StartScrape(ctx context.Context, scrapeIndex string) error {
-
+func (d dozerService) CheckExistingScrape(ctx context.Context) error {
 	res, _ := d.cache.Get("catdotcom")
 	if res == "in_progress" {
 		fmt.Println("scrape is in progress")
 		return errors.New("scrape is in progress")
 	}
+	return nil
+}
 
-	fmt.Println("COOL")
+func (d dozerService) StartScrape(ctx context.Context, scrapeIndex string) error {
 
 	d.cache.Set("catdotcom", "in_progress", time.Hour)
 	d.cache.Set(scrapeIndex, "in_progress", time.Hour)
