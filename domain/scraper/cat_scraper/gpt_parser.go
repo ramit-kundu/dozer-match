@@ -2,12 +2,14 @@ package catscraper
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
+
+	"github.com/kundu-ramit/dozer_match/domain/entity"
 )
 
-func GptParser(html string) {
+func GptParser(ctx context.Context, html string) (*entity.BullDozer, error) {
 	url := "https://api.openai.com/v1/chat/completions"
 
 	// Define the request payload
@@ -24,8 +26,25 @@ func GptParser(html string) {
 			Content string `json:"content"`
 		}{
 			{
-				Role:    "user",
-				Content: "Hello!",
+				Role: "user",
+				Content: `From the below html snippet find out 
+				○ Make ( Brand eg Caterpillar)
+				○ Model ( Model No )
+				○ Picture (check for link)
+				○ Category (i.e., Small Dozer, Medium Dozer, Large Dozer, Wheel Dozer)
+				○ Engine HP 
+				○ Operating Weight (in lbs or kgs)
+				and show it in json format. Only respond with the json.
+				Ex : {
+					"Make": "Caterpillar",
+					"Model": "D1",
+					"Picture": "https://s7d2.scene7.com/is/image/Caterpillar/CM20200423-2bfc1-01ee1?$cc-s$",
+					"Category": "Small Dozers",
+					"Engine HP": "80 HP",
+					"Operating Weight": "17855 lb"
+				  }
+				  
+				  html is : ` + html,
 			},
 		},
 	}
@@ -33,13 +52,13 @@ func GptParser(html string) {
 	// Convert the payload to JSON
 	jsonPayload, err := json.Marshal(payload)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	// Create the HTTP request
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonPayload))
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	// Set the request headers
@@ -50,7 +69,7 @@ func GptParser(html string) {
 	client := http.DefaultClient
 	res, err := client.Do(req)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	defer res.Body.Close()
 
@@ -58,9 +77,17 @@ func GptParser(html string) {
 	var result map[string]interface{}
 	err = json.NewDecoder(res.Body).Decode(&result)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
+	apiRes := result["choices"].([]map[string]interface{})[0]["message"].(map[string]map[string]interface{})["content"]
 
-	// Print the response
-	fmt.Println(result)
+	return &entity.BullDozer{
+		Make:            apiRes["Make"].(string),
+		Model:           apiRes["Model"].(string),
+		Picture:         apiRes["Picture"].(string),
+		Category:        apiRes["Category"].(string),
+		EngineHP:        apiRes["EngineHP"].(string),
+		OperatingWeight: apiRes["OperatingWeight"].(int64),
+	}, nil
+
 }

@@ -1,6 +1,7 @@
 package catscraper
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
 	"strings"
@@ -8,7 +9,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func ParseToChunk(html string) {
+func ParseToChunk(ctx context.Context, html string) {
 
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 	if err != nil {
@@ -31,6 +32,6 @@ func ParseToChunk(html string) {
 		return
 	}
 
-	GptParser(cardWrappers[0])
+	GptParser(ctx, cardWrappers[0])
 	fmt.Println("String successfully stored in file.")
 }

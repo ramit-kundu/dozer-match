@@ -1,13 +1,14 @@
 package catscraper
 
 import (
+	"context"
 	"time"
 
 	"github.com/go-rod/rod"
 	"github.com/go-rod/rod/lib/launcher"
 )
 
-func Crawl() {
+func Crawl(ctx context.Context) {
 
 	// Launch headless browser
 	launcher := launcher.New()

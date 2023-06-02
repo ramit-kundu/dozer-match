@@ -4,16 +4,8 @@ type BullDozer struct {
 	Make            string
 	Model           string
 	Picture         string
-	Category        DozerCategory
+	Category        string //should be made enum future scope
 	EngineHP        string
 	OperatingWeight int64
+	ScrapeIndex     int64
 }
-
-type DozerCategory int
-
-const (
-	SmallDozer DozerCategory = iota
-	MediumDozer
-	LargeDozer
-	WheelDozer
-)

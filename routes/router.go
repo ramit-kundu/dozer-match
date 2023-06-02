@@ -20,7 +20,7 @@ func SetupRouter() *gin.Engine {
 	router.GET("/users", func(c *gin.Context) {
 		// Handle GET request to /users
 		c.JSON(200, gin.H{"message": "Get all users"})
-		catscraper.Crawl()
+		catscraper.Crawl(c)
 	})
 
 	router.POST("/users", func(c *gin.Context) {
