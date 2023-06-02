@@ -32,10 +32,6 @@ func (m manualParser) Parse(ctx context.Context, html string) (*entity.BullDozer
 	engineHP := doc.Find(".value.spec:contains('Power - Net')").Next().Text()
 	operatingWeight := doc.Find(".value.spec:contains('Operating Weight')").Next().Text()
 
-	if err != nil {
-		fmt.Println(err)
-	}
-
 	return &entity.BullDozer{
 		Make:            Make,
 		Model:           model,
