@@ -5,10 +5,11 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/kundu-ramit/dozer_match/service"
 )
 
 type ScraperController struct {
-	service service.scrapeService
+	service service.DozerService
 }
 
 func (sc *ScraperController) Get(c *gin.Context) {

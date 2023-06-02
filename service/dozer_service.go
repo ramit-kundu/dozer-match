@@ -10,6 +10,7 @@ import (
 	"github.com/kundu-ramit/dozer_match/domain/cache"
 	"github.com/kundu-ramit/dozer_match/domain/entity"
 	"github.com/kundu-ramit/dozer_match/domain/repository"
+	catscraper "github.com/kundu-ramit/dozer_match/domain/scraper/cat_scraper"
 )
 
 type DozerService interface {
@@ -17,8 +18,9 @@ type DozerService interface {
 }
 
 type dozerService struct {
-	repo  repository.BullDozerRepository
-	cache cache.Cache
+	repo    repository.BullDozerRepository
+	cache   cache.Cache
+	scraper catscraper.CatScraper
 }
 
 func NewDozerService() DozerService {
