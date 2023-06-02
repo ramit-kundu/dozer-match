@@ -6,7 +6,8 @@ import (
 	"os"
 
 	"github.com/kundu-ramit/dozer_match/cmd"
-	"github.com/kundu-ramit/dozer_match/database"
+	"github.com/kundu-ramit/dozer_match/infra/database"
+
 	"github.com/kundu-ramit/dozer_match/routes"
 )
 
@@ -21,8 +22,6 @@ func main() {
 
 	// Handle the command
 	switch args[0] {
-	case "cron":
-		startCron()
 	case "server":
 		startServer()
 	case "migration":
@@ -32,12 +31,9 @@ func main() {
 	}
 }
 
-func startCron() {
-}
-
 func applyMigration() {
 
-	db, err := database.InitializeDatabase()
+	db, err := database.Initialize()
 	if err != nil {
 		panic(err)
 	}

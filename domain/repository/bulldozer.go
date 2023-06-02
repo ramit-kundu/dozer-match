@@ -1,26 +1,29 @@
 package repository
 
 import (
+	"context"
+
 	"github.com/kundu-ramit/dozer_match/domain/entity"
+	"github.com/kundu-ramit/dozer_match/infra/database"
 	"gorm.io/gorm"
 )
 
 type BullDozerRepository interface {
-	BulkCreate(dozers []entity.BullDozer) error
-	Fetch(scrapeIndex int64) ([]entity.BullDozer, error)
+	BulkCreate(ctx context.Context, dozers []entity.BullDozer) error
+	Fetch(ctx context.Context, scrapeIndex string) ([]entity.BullDozer, error)
 }
 
 type bullDozerRepository struct {
 	db *gorm.DB
 }
 
-func NewBullDozerRepository(db *gorm.DB) BullDozerRepository {
+func NewBullDozerRepository() BullDozerRepository {
 	return &bullDozerRepository{
-		db: db,
+		db: database.Initialize(),
 	}
 }
 
-func (r bullDozerRepository) BulkCreate(dozers []entity.BullDozer) error {
+func (r bullDozerRepository) BulkCreate(ctx context.Context, dozers []entity.BullDozer) error {
 	err := r.db.Create(&dozers).Error
 	if err != nil {
 		return err
@@ -28,7 +31,7 @@ func (r bullDozerRepository) BulkCreate(dozers []entity.BullDozer) error {
 	return nil
 }
 
-func (r bullDozerRepository) Fetch(scrapeIndex int64) ([]entity.BullDozer, error) {
+func (r bullDozerRepository) Fetch(ctx context.Context, scrapeIndex string) ([]entity.BullDozer, error) {
 	var dozers []entity.BullDozer
 	err := r.db.Where("scrape_index = ?", scrapeIndex).Find(&dozers).Error
 	if err != nil {

@@ -26,7 +26,7 @@ func ApplyMigration(ctx context.Context, db *gorm.DB) {
 				Picture         string    `gorm:"column:picture;"`
 				Category        string    `gorm:"column:category;"` //better as enum
 				EngineHP        string    `gorm:"column:engine_hp;"`
-				OperatingWeight int64     `gorm:"column:operating_weight;"`
+				OperatingWeight int       `gorm:"column:operating_weight;"`
 			}
 			// it's a good pratice to copy the struct inside the function,
 			// so side effects are prevented if the original struct changes during the time

@@ -9,69 +9,20 @@ import (
 	"strconv"
 
 	"github.com/kundu-ramit/dozer_match/domain/entity"
+	"github.com/kundu-ramit/dozer_match/domain/scraper"
 )
 
-func GptParser(ctx context.Context, html string) (*entity.BullDozer, error) {
+type gptParser struct{}
+
+func NewGptParser() scraper.Parser {
+	return gptParser{}
+}
+
+func (g gptParser) Parse(ctx context.Context, html string) (*entity.BullDozer, error) {
 	url := "https://api.openai.com/v1/chat/completions"
 
 	// Define the request payload
-	payload := struct {
-		Model    string `json:"model"`
-		Messages []struct {
-			Role    string `json:"role"`
-			Content string `json:"content"`
-		} `json:"messages"`
-	}{
-		Model: "gpt-3.5-turbo",
-		Messages: []struct {
-			Role    string `json:"role"`
-			Content string `json:"content"`
-		}{
-			{
-				Role: "system",
-				Content: `You are a helpful assistant that inputs a html snippet 
-				which is scraped from a website of bulldozers and from that html snippet 
-				finds out 
-				○ Make ( Brand eg Caterpillar)
-				○ Model ( Model No )
-				○ Picture (check for link)
-				○ Category (i.e., Small Dozer, Medium Dozer, Large Dozer, Wheel Dozer)
-				○ Engine HP 
-				○ Operating Weight (in lbs or kgs)
-				of the bulldozer. You will only respond with a json in this format
-				{
-					"Make": "Caterpillar",
-					"Model": "D1",
-					"Picture": "https://s7d2.scene7.com/is/image/Caterpillar/CM20200423-2bfc1-01ee1?$cc-s$",
-					"Category": "Small Dozers",
-					"EngineHP": "80 HP",
-					"OperatingWeight": "17855 lb"
-				  } If youre unable to find any component in json plz put empty string and not null
-			 `,
-			},
-			{
-				Role: "user",
-				Content: `From the below html snippet find out 
-				○ Make ( Brand eg Caterpillar)
-				○ Model ( Model No )
-				○ Picture (check for link)
-				○ Category (i.e., Small Dozer, Medium Dozer, Large Dozer, Wheel Dozer)
-				○ Engine HP 
-				○ Operating Weight (in lbs or kgs)
-				and show it in json format. Only respond with the json.
-				Ex : {
-					"Make": "Caterpillar",
-					"Model": "D1",
-					"Picture": "https://s7d2.scene7.com/is/image/Caterpillar/CM20200423-2bfc1-01ee1?$cc-s$",
-					"Category": "Small Dozers",
-					"EngineHP": "80 HP",
-					"OperatingWeight": "17855 lb"
-				  }
-				  
-				  html is : ` + html,
-			},
-		},
-	}
+	payload := g.getGptPayload(html)
 
 	// Convert the payload to JSON
 	jsonPayload, err := json.Marshal(payload)
@@ -112,7 +63,7 @@ func GptParser(ctx context.Context, html string) (*entity.BullDozer, error) {
 	apiRes := make(map[string]interface{})
 	json.Unmarshal([]byte(content), &apiRes)
 
-	opWt, _ := strconv.ParseInt(apiRes["OperatingWeight"].(string), 10, 64)
+	opWt, _ := strconv.Atoi(apiRes["OperatingWeight"].(string))
 
 	return &entity.BullDozer{
 		Make:            apiRes["Make"].(string),
@@ -123,4 +74,68 @@ func GptParser(ctx context.Context, html string) (*entity.BullDozer, error) {
 		OperatingWeight: opWt,
 	}, nil
 
+}
+
+func (g gptParser) getGptPayload(html string) gptPayload {
+
+	return gptPayload{
+		Model: "gpt-3.5-turbo",
+		Messages: []struct {
+			Role    string `json:"role"`
+			Content string `json:"content"`
+		}{
+			{
+				Role: "system",
+				Content: `You are a helpful assistant that inputs a html snippet 
+				which is scraped from a website of bulldozers and from that html snippet 
+				finds out 
+				○ Make ( Brand eg Caterpillar)
+				○ Model ( Model No )
+				○ Picture (check for link)
+				○ Category (i.e., Small Dozer, Medium Dozer, Large Dozer, Wheel Dozer)
+				○ Engine HP 
+				○ Operating Weight (in lbs or kgs)
+				of the bulldozer. You will only respond with a json in this format
+				{
+					"Make": "Caterpillar",
+					"Model": "Cat C3.6" or "D1",
+					"Picture": "https://s7d2.scene7.com/is/image/Caterpillar/CM20200423-2bfc1-01ee1?$cc-s$",
+					"Category": "Small Dozers",
+					"EngineHP": "80 HP",
+					"OperatingWeight": "17855 lb"
+				  } If youre unable to find any component in json plz put empty string and not null
+			 `,
+			},
+			{
+				Role: "user",
+				Content: `From the below html snippet find out 
+				○ Make ( Brand eg Caterpillar)
+				○ Model ( Model No )
+				○ Picture (check for link)
+				○ Category (i.e., Small Dozer, Medium Dozer, Large Dozer, Wheel Dozer)
+				○ Engine HP 
+				○ Operating Weight (in lbs or kgs)
+				and show it in json format. Only respond with the json.
+				Ex : {
+					"Make": "Caterpillar",
+					"Model": "D1",
+					"Picture": "https://s7d2.scene7.com/is/image/Caterpillar/CM20200423-2bfc1-01ee1?$cc-s$",
+					"Category": "Small Dozers",
+					"EngineHP": "80 HP",
+					"OperatingWeight": "17855 lb"
+				  }
+				  
+				  html is : ` + html,
+			},
+		},
+	}
+
+}
+
+type gptPayload struct {
+	Model    string `json:"model"`
+	Messages []struct {
+		Role    string `json:"role"`
+		Content string `json:"content"`
+	} `json:"messages"`
 }
