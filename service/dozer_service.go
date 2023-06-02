@@ -85,7 +85,10 @@ func (d dozerService) StartScrape(ctx context.Context, scrapeIndex string) error
 	d.cache.Set(scrapeIndex, "in_progress", time.Hour)
 
 	dozers, err := d.scraper.ScrapePage(ctx)
-	fmt.Println(dozers)
+
+	for i := 0; i < len(dozers); i++ {
+		dozers[i].ScrapeIndex = scrapeIndex
+	}
 
 	if err != nil {
 		fmt.Println(err)

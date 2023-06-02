@@ -2,7 +2,7 @@ package catscraper
 
 import (
 	"context"
-	"strconv"
+	"fmt"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -21,6 +21,7 @@ func (m manualParser) Parse(ctx context.Context, html string) (*entity.BullDozer
 
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 	if err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 
@@ -31,7 +32,9 @@ func (m manualParser) Parse(ctx context.Context, html string) (*entity.BullDozer
 	engineHP := doc.Find(".value.spec:contains('Power - Net')").Next().Text()
 	operatingWeight := doc.Find(".value.spec:contains('Operating Weight')").Next().Text()
 
-	opWt, _ := strconv.Atoi(operatingWeight)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	return &entity.BullDozer{
 		Make:            Make,
@@ -39,6 +42,6 @@ func (m manualParser) Parse(ctx context.Context, html string) (*entity.BullDozer
 		Picture:         picture,
 		Category:        category,
 		EngineHP:        engineHP,
-		OperatingWeight: opWt,
+		OperatingWeight: operatingWeight,
 	}, nil
 }

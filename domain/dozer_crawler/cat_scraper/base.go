@@ -70,7 +70,7 @@ func (c catScraper) scrapeSinglePage(ctx context.Context, page *rod.Page, i int)
 	if err != nil {
 		return nil, err
 	}
-	return c.parser.Parse(ctx, html)
+	return c.parser.ParseModule(ctx, html)
 }
 
 func (c catScraper) removeDuplicateAndFormat(dozers []*entity.BullDozer) []entity.BullDozer {
@@ -79,8 +79,10 @@ func (c catScraper) removeDuplicateAndFormat(dozers []*entity.BullDozer) []entit
 	for i := 0; i < len(dozers); i++ {
 		dozerHash := c.GenerateDozerHash(*dozers[i])
 		_, exists := hs[dozerHash]
+		fmt.Println(dozerHash)
 		if !exists {
 			newDozer = append(newDozer, *dozers[i])
+			hs[dozerHash] = true
 		}
 
 	}
@@ -88,5 +90,5 @@ func (c catScraper) removeDuplicateAndFormat(dozers []*entity.BullDozer) []entit
 }
 
 func (c catScraper) GenerateDozerHash(dozer entity.BullDozer) string {
-	return dozer.Make + " | " + dozer.Model + " | " + dozer.Picture + " | " + dozer.Category + " | " + dozer.EngineHP + " | " + strconv.Itoa(dozer.OperatingWeight)
+	return dozer.Make + " | " + dozer.Model + " | " + dozer.Picture + " | " + dozer.Category + " | " + dozer.EngineHP + " | " + dozer.OperatingWeight
 }

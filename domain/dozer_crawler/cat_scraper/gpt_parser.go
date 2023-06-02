@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strconv"
 
 	scraper "github.com/kundu-ramit/dozer_match/domain/dozer_crawler"
 	"github.com/kundu-ramit/dozer_match/domain/entity"
@@ -66,15 +65,13 @@ func (g gptParser) Parse(ctx context.Context, html string) (*entity.BullDozer, e
 	apiRes := make(map[string]interface{})
 	json.Unmarshal([]byte(content), &apiRes)
 
-	opWt, _ := strconv.Atoi(apiRes["OperatingWeight"].(string))
-
 	return &entity.BullDozer{
 		Make:            apiRes["Make"].(string),
 		Model:           apiRes["Model"].(string),
 		Picture:         apiRes["Picture"].(string),
 		Category:        apiRes["Category"].(string),
 		EngineHP:        apiRes["EngineHP"].(string),
-		OperatingWeight: opWt,
+		OperatingWeight: apiRes["OperatingWeight"].(string),
 	}, nil
 
 }

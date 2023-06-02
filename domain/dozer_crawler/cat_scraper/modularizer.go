@@ -11,7 +11,7 @@ import (
 )
 
 type Modularizer interface {
-	Parse(ctx context.Context, html string) ([]*entity.BullDozer, error)
+	ParseModule(ctx context.Context, html string) ([]*entity.BullDozer, error)
 }
 type modularizer struct {
 	parser scraper.Parser
@@ -29,7 +29,7 @@ func NewModularizer(useGpt bool) Modularizer {
 	}
 }
 
-func (c modularizer) Parse(ctx context.Context, html string) ([]*entity.BullDozer, error) {
+func (c modularizer) ParseModule(ctx context.Context, html string) ([]*entity.BullDozer, error) {
 
 	dozers := []*entity.BullDozer{}
 

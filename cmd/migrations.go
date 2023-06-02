@@ -23,7 +23,7 @@ func ApplyMigration(db *gorm.DB) {
 				Picture         string `gorm:"column:picture;"`
 				Category        string `gorm:"column:category;"` //better as enum
 				EngineHP        string `gorm:"column:engine_hp;"`
-				OperatingWeight int    `gorm:"column:operating_weight;"`
+				OperatingWeight string `gorm:"column:operating_weight;"`
 				ScrapeIndex     string `gorm:"column:scrape_index;"`
 			}
 			// it's a good pratice to copy the struct inside the function,

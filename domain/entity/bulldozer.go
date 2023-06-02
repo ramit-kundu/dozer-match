@@ -6,6 +6,6 @@ type BullDozer struct {
 	Picture         string
 	Category        string //should be made enum future scope
 	EngineHP        string
-	OperatingWeight int
+	OperatingWeight string
 	ScrapeIndex     string
 }

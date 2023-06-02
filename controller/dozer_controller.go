@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"context"
 	"fmt"
 	"math/rand"
 	"net/http"
@@ -54,8 +53,9 @@ func (sc *scraperController) StartScrape(c *gin.Context) {
 		return
 	}
 
+	sc.service.StartScrape(c, scrapeIndex)
+
 	c.JSON(http.StatusOK, `Scrape started : scrapeIndex is : `+scrapeIndex)
-	sc.service.StartScrape(context.TODO(), scrapeIndex)
 }
 
 func (sc *scraperController) Clear(c *gin.Context) {
