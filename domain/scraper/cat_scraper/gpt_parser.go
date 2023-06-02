@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/kundu-ramit/dozer_match/domain/entity"
@@ -38,7 +39,7 @@ func (g gptParser) Parse(ctx context.Context, html string) (*entity.BullDozer, e
 
 	// Set the request headers
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer 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")
+	req.Header.Set("Authorization", `Bearer `+os.Getenv("GPT_KEY"))
 
 	// Send the request
 	client := http.DefaultClient

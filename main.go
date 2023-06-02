@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"log"
 	"os"
 
@@ -33,11 +32,8 @@ func main() {
 
 func applyMigration() {
 
-	db, err := database.Initialize()
-	if err != nil {
-		panic(err)
-	}
-	cmd.ApplyMigration(context.TODO(), db)
+	db := database.Initialize()
+	cmd.ApplyMigration(db)
 
 }
 

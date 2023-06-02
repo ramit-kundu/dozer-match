@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"context"
 	"fmt"
 	"log"
 
@@ -10,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func ApplyMigration(ctx context.Context, db *gorm.DB) {
+func ApplyMigration(db *gorm.DB) {
 
 	m := gormigrate.New(db, gormigrate.DefaultOptions, []*gormigrate.Migration{{
 		// create `dozers` table

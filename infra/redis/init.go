@@ -2,19 +2,18 @@ package redis
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/go-redis/redis"
 )
 
 func Initialize() *redis.Client {
-	// Create a new Redis client
 	client := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379", // Redis server address
-		Password: "",               // Redis password
-		DB:       0,                // Redis database number
+		Addr:     os.Getenv("REDIS"),
+		Password: "",
+		DB:       0,
 	})
 
-	// Ping the Redis server to check the connection
 	pong, err := client.Ping().Result()
 	if err != nil {
 		panic(err)
