@@ -29,8 +29,8 @@ func (m manualParser) Parse(ctx context.Context, html string) (*entity.BullDozer
 	model := doc.Find(".value.spec:contains('Engine Model')").Next().Text()
 	picture, _ := doc.Find("img.lazyloaded").Attr("src")
 	category := doc.Find(".value.family").Text()
-	engineHP := doc.Find(".value.spec:contains('Power - Net')").Next().Text()
-	operatingWeight := doc.Find(".value.spec:contains('Operating Weight')").Next().Text()
+	engineHP := doc.Find(".value.spec:contains('Power')").Next().Text()
+	operatingWeight := doc.Find(".value.spec:contains('Weight')").Next().Text()
 
 	if strings.Contains(operatingWeight, "lb") {
 		operatingWeight = strings.Split(operatingWeight, " ")[0]
