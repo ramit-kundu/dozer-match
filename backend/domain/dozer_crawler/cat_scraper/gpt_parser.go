@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 
 	scraper "github.com/kundu-ramit/dozer_match/domain/dozer_crawler"
 	"github.com/kundu-ramit/dozer_match/domain/entity"
@@ -65,13 +66,23 @@ func (g gptParser) Parse(ctx context.Context, html string) (*entity.BullDozer, e
 	apiRes := make(map[string]interface{})
 	json.Unmarshal([]byte(content), &apiRes)
 
+	engineHP := apiRes["EngineHP"].(string)
+	operatingWeight := apiRes["OperatingWeight"].(string)
+
+	if strings.Contains(operatingWeight, "lb") {
+		operatingWeight = strings.Split(operatingWeight, " ")[0]
+	}
+	if strings.Contains(engineHP, "HP") {
+		engineHP = strings.Split(engineHP, " ")[0]
+	}
+
 	return &entity.BullDozer{
 		Make:            apiRes["Make"].(string),
 		Model:           apiRes["Model"].(string),
 		Picture:         apiRes["Picture"].(string),
 		Category:        apiRes["Category"].(string),
-		EngineHP:        apiRes["EngineHP"].(string),
-		OperatingWeight: apiRes["OperatingWeight"].(string),
+		EngineHP:        engineHP,
+		OperatingWeight: operatingWeight,
 	}, nil
 
 }

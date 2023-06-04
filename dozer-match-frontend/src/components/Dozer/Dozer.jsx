@@ -4,7 +4,7 @@ import './Dozer.css'
 
 const { Meta } = AntdCard;
 
-const Dozer = ({ category, engine, hp, weight, make, model, imageUrl }) => {
+const Dozer = ({ category, hp, weight, make, model, imageUrl }) => {
   return (
     <AntdCard
       hoverable
@@ -14,8 +14,7 @@ const Dozer = ({ category, engine, hp, weight, make, model, imageUrl }) => {
       <Meta title={model} description={make} />
       <div>
         <p>Category: {category}</p>
-        <p>Engine: {engine}</p>
-        <p>HP: {hp}</p>
+        <p>Engine HP: {hp}</p>
         <p>Operating Weight: {weight}</p>
       </div>
     </AntdCard>

@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/go-playground/validator"
 	"github.com/go-rod/rod"
 	"github.com/go-rod/rod/lib/launcher"
 	scraper "github.com/kundu-ramit/dozer_match/domain/dozer_crawler"
@@ -77,6 +78,11 @@ func (c catScraper) removeDuplicateAndFormat(dozers []*entity.BullDozer) []entit
 	hs := map[string]bool{}
 	newDozer := []entity.BullDozer{}
 	for i := 0; i < len(dozers); i++ {
+		v := validator.New()
+		err := v.Struct(dozers[i])
+		if err != nil {
+			continue
+		}
 		dozerHash := c.GenerateDozerHash(*dozers[i])
 		_, exists := hs[dozerHash]
 		fmt.Println(dozerHash)

@@ -1,11 +1,11 @@
 package entity
 
 type BullDozer struct {
-	Make            string
-	Model           string
+	Make            string `validate:"required"`
+	Model           string `validate:"required"`
 	Picture         string
-	Category        string //should be made enum future scope
-	EngineHP        string
-	OperatingWeight string
+	Category        string `validate:"required"`
+	EngineHP        string `validate:"required"`
+	OperatingWeight string `validate:"required"`
 	ScrapeIndex     string
 }

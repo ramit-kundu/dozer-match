@@ -17,7 +17,7 @@ import (
 type DozerService interface {
 	FetchById(ctx context.Context, scrapeIndex string) ([]entity.BullDozer, error)
 	FetchLatest(ctx context.Context) ([]entity.BullDozer, error)
-	StartScrape(ctx context.Context, scrapeIndex string) error
+	StartScrape(ctx context.Context, scrapeIndex string) ([]entity.BullDozer, error)
 	CheckExistingScrape(ctx context.Context) error
 	Delete(ctx context.Context) error
 }
@@ -59,7 +59,7 @@ func (d dozerService) FetchById(ctx context.Context, scrapeIndex string) ([]enti
 func (d dozerService) FetchLatest(ctx context.Context) ([]entity.BullDozer, error) {
 
 	scrapeIndex, err := d.cache.Get("cat_latest_index")
-	if err != nil {
+	if err != nil || scrapeIndex == "" {
 		return nil, errors.New("error in getting latest scrape index maybe no scraping is done")
 	}
 
@@ -79,10 +79,10 @@ func (d dozerService) CheckExistingScrape(ctx context.Context) error {
 	return nil
 }
 
-func (d dozerService) StartScrape(ctx context.Context, scrapeIndex string) error {
+func (d dozerService) StartScrape(ctx context.Context, scrapeIndex string) ([]entity.BullDozer, error) {
 
-	d.cache.Set("catdotcom", "in_progress", time.Hour)
-	d.cache.Set(scrapeIndex, "in_progress", time.Hour)
+	d.cache.Set("catdotcom", "in_progress", 3*time.Minute)
+	d.cache.Set(scrapeIndex, "in_progress", 3*time.Minute)
 
 	dozers, err := d.scraper.ScrapePage(ctx)
 
@@ -92,7 +92,7 @@ func (d dozerService) StartScrape(ctx context.Context, scrapeIndex string) error
 
 	if err != nil {
 		fmt.Println(err)
-		return err
+		return nil, err
 	}
 	d.repo.BulkCreate(ctx, dozers)
 
@@ -100,7 +100,7 @@ func (d dozerService) StartScrape(ctx context.Context, scrapeIndex string) error
 	d.cache.Remove(scrapeIndex)
 	d.cache.Set("cat_latest_index", scrapeIndex, 0)
 
-	return nil
+	return dozers, nil
 
 }
 

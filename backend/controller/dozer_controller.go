@@ -53,9 +53,13 @@ func (sc *scraperController) StartScrape(c *gin.Context) {
 		return
 	}
 
-	sc.service.StartScrape(c, scrapeIndex)
+	dozers, err := sc.service.StartScrape(c, scrapeIndex)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
 
-	c.JSON(http.StatusOK, `Scrape started : scrapeIndex is : `+scrapeIndex)
+	c.JSON(http.StatusOK, dozers)
 }
 
 func (sc *scraperController) Clear(c *gin.Context) {

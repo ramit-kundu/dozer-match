@@ -15,10 +15,6 @@ const MyForm = ({
   handleEngineHPChange,
   handleOperatingWtChange ,
   onRefresh}) => {
-  if(!Array.isArray(category) || category === undefined) {
-    category = []
-  }
-
   return (
     <div className="form-container">
       <Form className="form">
@@ -28,7 +24,7 @@ const MyForm = ({
         >
           <Checkbox.Group onChange={handleCheckboxChange} value={selectedCategory}>
             {category.map((c)=>{
-              return <Checkbox value={c}>{c}</Checkbox>
+              return <Checkbox value={c} key = {c}>{c}</Checkbox>
             })}
           </Checkbox.Group>
         </Form.Item>
@@ -36,13 +32,17 @@ const MyForm = ({
           label="Engine HP"
           name="engineHP"
         >
-          <Slider range min={minEngineHP} max={maxEngineHP} onChange={handleEngineHPChange} value={selectedEngineHP}/>
+          <Slider range min={parseInt(minEngineHP)-1} max={parseInt(maxEngineHP)+1} 
+          onChange={handleEngineHPChange} value={selectedEngineHP}
+          />
         </Form.Item>
         <Form.Item
           label="Operating Weight"
           name="operatingWeight"
         >
-          <Slider range min={minOperatingWT} max={maxOperatingWT} onChange={handleOperatingWtChange} value={selectedOperatingWt} />
+          <Slider range min={parseInt(minOperatingWT)-1} max={parseInt(maxOperatingWT)+1} 
+          onChange={handleOperatingWtChange} value={selectedOperatingWt} 
+          />
         </Form.Item>
         <Form.Item>
         <Form.Item>

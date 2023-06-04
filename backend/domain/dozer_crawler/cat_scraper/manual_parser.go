@@ -32,6 +32,13 @@ func (m manualParser) Parse(ctx context.Context, html string) (*entity.BullDozer
 	engineHP := doc.Find(".value.spec:contains('Power - Net')").Next().Text()
 	operatingWeight := doc.Find(".value.spec:contains('Operating Weight')").Next().Text()
 
+	if strings.Contains(operatingWeight, "lb") {
+		operatingWeight = strings.Split(operatingWeight, " ")[0]
+	}
+	if strings.Contains(engineHP, "HP") {
+		engineHP = strings.Split(engineHP, " ")[0]
+	}
+
 	return &entity.BullDozer{
 		Make:            Make,
 		Model:           model,

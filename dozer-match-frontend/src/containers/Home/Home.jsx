@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Layout, Row, Col } from 'antd';
-import axios from 'axios'
 
+import {LoadNewScrape,GetNewScrape,GetScrape,UpdateFilter} from './Parser'
 
 import DozerList from '../DozerList/DozerList';
 import MyForm from '../../components/Form/Form';
 
 const { Content } = Layout;
-
-const onFinish = (values) => {
-  console.log('Form values:', values);
-};
 
 
 
@@ -19,11 +15,11 @@ const Home = () => {
 
   const [category, setCategory] = useState([]);
   const [minEngineHP, setMinEngineHP] = useState(0);
-  const [maxEngineHP, setMaxEngineHP] = useState(100);
+  const [maxEngineHP, setMaxEngineHP] = useState(99999999);
   const [minOperatingWT, setMinOperatingWT] = useState(0);
-  const [maxOperatingWT, setMaxOperatingWT] = useState(100);
-  const [selectedCategory, setSelectedCategory] = useState([]);
-  const [selectedOperatingWt, setSelectedOperatingWt] = useState([0,100]);
+  const [maxOperatingWT, setMaxOperatingWT] = useState(9999999);
+  const [selectedCategory, setSelectedCategory] = useState([0,0]);
+  const [selectedOperatingWt, setSelectedOperatingWt] = useState([0,0]);
   const [selectedEngineHP, setSelectedEngineHP] = useState([0,100]);
   const [scrapeData,setScrapeData] = useState([])
   const [displayData,setDisplayData] = useState([])
@@ -45,81 +41,50 @@ const Home = () => {
     }
   }
 
-  // category,
-  // minEngineHP,
-  // maxEngineHP,
-  // minOperatingWT,
-  // maxOperatingWT,
-  // selectedCategory ,
-  // selectedOperatingWt ,
-  // selectedEngineHP,
-  // handleCheckboxChange ,
-  // handleEngineHPChange,
-  // handleOperatingWtChange ,
-  // onRefresh
+  useEffect(() => {
+    GetScrape(setScrapeData);
+    },[]); 
+
+  useEffect(() => {
+
+    if(scrapeData !== undefined && scrapeData !== null && scrapeData.length !== 0 ){
+      LoadNewScrape(scrapeData,selectedCategory,selectedOperatingWt,selectedEngineHP,setMinOperatingWT,setMaxOperatingWT,setCategory,setMinEngineHP,setMaxEngineHP, setSelectedCategory,setSelectedOperatingWt,setSelectedEngineHP, setDisplayData)
+    }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[scrapeData]); 
+
+    useEffect(() => {
+      if(scrapeData !== undefined && scrapeData !== null  && 
+        selectedCategory !== undefined && selectedCategory !== null && selectedCategory.length !== 0  && 
+        selectedOperatingWt !== undefined && selectedOperatingWt !== null && selectedOperatingWt.length === 2 && 
+        selectedEngineHP !== undefined && selectedEngineHP !== null && selectedEngineHP.length === 2
+        )
+     setDisplayData([...UpdateFilter(scrapeData,selectedCategory,selectedOperatingWt,selectedEngineHP,setDisplayData)])
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      },[selectedCategory,selectedOperatingWt,selectedEngineHP]); 
 
   const handleCheckboxChange = (checkedValues) => {
-    setSelectedCategory(checkedValues);
+     setSelectedCategory([...checkedValues]);
   };
 
-  const handleEngineHPChange = (minHP, maxHP) => {
-    setMinEngineHP(minHP);
-    setMaxEngineHP(maxHP);
+  const handleEngineHPChange = (hp) => {
+    setSelectedEngineHP([...hp])  
   };
 
-  const handleOperatingWtChange = (minWT, maxWT) => {
-    setMinOperatingWT(minWT);
-    setMaxOperatingWT(maxWT);
+  const handleOperatingWtChange = (wt) => {
+    setSelectedOperatingWt([...wt])
   };
 
   const onRefresh = () => {
-    console.log("REFRESH")
+    GetNewScrape(setScrapeData)
   };
-
-
-
-
-  const fetchScrapeData = async () => {
-    try {
-      const response = await axios.get('localhost:8002/scrape');
-      if(response.status ==200){
-        setScrapeData(response.data)
-      }else {
-        await fetchNewScrapeData()
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  
-  const fetchNewScrapeData = async () => {
-    try {
-      const response = await axios.post('localhost:8002/scrape');
-      if(response.status ==200){
-        setScrapeData(response.data)
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-
-  // useEffect(() => {
-  //   fetchScrapeData();
-  //   }, []); 
 
   const getDozerList = ()=>{
     return <Row>
-      <Col xs={24} md={12} lg={12}>
-      <DozerList/>
-            </Col>
-            <Col xs={24} md={12} lg={12}>
-            <DozerList/>
-            </Col>
+      <DozerList xs={24} md={12} lg={12} cardData={displayData}/>
     </Row>
   }
 
-  var d = {onSubmit: onFinish}
   return (
     <Layout>
       <Content style={{ padding: '50px' }}>
