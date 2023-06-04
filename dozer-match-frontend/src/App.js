@@ -1,10 +1,10 @@
-import logo from './logo.svg';
+
 import './App.css';
-import Dozer  from './components/Dozer/Dozer';
-import DozerList from './containers/DozerList/DozerList';
 import Home from './containers/Home/Home';
 
 function App() {
+
+  console.log("STARTED")
 
   // const category = 'Excavator';
   // const engine = 'Diesel';

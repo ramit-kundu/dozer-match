@@ -1,46 +1,68 @@
 import React from 'react';
-import { Form, Input, Button, Checkbox, Slider } from 'antd';
+import { Form,Row,Col, Button, Checkbox, Slider } from 'antd';
 import './Form.css'
 
-const MyForm = () => {
-  const onFinish = (values) => {
-    console.log('Form values:', values);
-  };
+const MyForm = ({
+  category,
+  minEngineHP,
+  maxEngineHP,
+  minOperatingWT,
+  maxOperatingWT,
+  selectedCategory ,
+  selectedOperatingWt ,
+  selectedEngineHP,
+  handleCheckboxChange ,
+  handleEngineHPChange,
+  handleOperatingWtChange ,
+  onRefresh}) => {
+  if(!Array.isArray(category) || category === undefined) {
+    category = []
+  }
 
   return (
     <div className="form-container">
-      <Form onFinish={onFinish} className="form">
+      <Form className="form">
         <Form.Item
           label="Category"
           name="category"
-          rules={[{ required: true, message: 'Please select at least one category' }]}
         >
-          <Checkbox.Group>
-            <Checkbox value="smallDozer">Small Dozer</Checkbox>
-            <Checkbox value="mediumDozer">Medium Dozer</Checkbox>
-            <Checkbox value="largeDozer">Large Dozer</Checkbox>
-            <Checkbox value="wheelDozer">Wheel Dozer</Checkbox>
+          <Checkbox.Group onChange={handleCheckboxChange} value={selectedCategory}>
+            {category.map((c)=>{
+              return <Checkbox value={c}>{c}</Checkbox>
+            })}
           </Checkbox.Group>
         </Form.Item>
         <Form.Item
           label="Engine HP"
           name="engineHP"
-          rules={[{ required: true, message: 'Please select the engine HP' }]}
         >
-          <Slider range min={0} max={1000} />
+          <Slider range min={minEngineHP} max={maxEngineHP} onChange={handleEngineHPChange} value={selectedEngineHP}/>
         </Form.Item>
         <Form.Item
           label="Operating Weight"
           name="operatingWeight"
-          rules={[{ required: true, message: 'Please select the operating weight' }]}
         >
-          <Slider range min={0} max={50000} />
+          <Slider range min={minOperatingWT} max={maxOperatingWT} onChange={handleOperatingWtChange} value={selectedOperatingWt} />
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Submit
+        <Form.Item>
+        <Row></Row>
+        <Row>
+          <br/>
+        </Row>
+          <Row>
+          <Col lg={12} md={12} sm={0} >
+            </Col>
+            <Col lg={12} md={12} >
+            <Button type="primary" onClick={onRefresh} className='formbutton'>
+            REFRESH
           </Button>
+            </Col>
+          </Row>
         </Form.Item>
+          
+        </Form.Item>
+        
       </Form>
     </div>
   );
