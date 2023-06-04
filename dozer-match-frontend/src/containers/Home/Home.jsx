@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Layout, Row, Col } from 'antd';
+import { Layout, Row, Col ,Alert} from 'antd';
 
 import {LoadNewScrape,GetNewScrape,GetScrape,UpdateFilter} from './Parser'
 
@@ -23,6 +23,7 @@ const Home = () => {
   const [selectedEngineHP, setSelectedEngineHP] = useState([0,100]);
   const [scrapeData,setScrapeData] = useState([])
   const [displayData,setDisplayData] = useState([])
+  const [alert,setAlert] = useState(null)
 
   const getFormObject = ()=> {
     return {
@@ -42,12 +43,12 @@ const Home = () => {
   }
 
   useEffect(() => {
-    GetScrape(setScrapeData);
+    GetScrape(setScrapeData,setAlert);
     },[]); 
 
   useEffect(() => {
 
-    if(scrapeData !== undefined && scrapeData !== null && scrapeData.length !== 0 ){
+    if(scrapeData !== undefined && scrapeData !== null && scrapeData.length !== 0 && Array.isArray(selectedCategory) ){
       LoadNewScrape(scrapeData,selectedCategory,selectedOperatingWt,selectedEngineHP,setMinOperatingWT,setMaxOperatingWT,setCategory,setMinEngineHP,setMaxEngineHP, setSelectedCategory,setSelectedOperatingWt,setSelectedEngineHP, setDisplayData)
     }
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -55,7 +56,7 @@ const Home = () => {
 
     useEffect(() => {
       if(scrapeData !== undefined && scrapeData !== null  && 
-        selectedCategory !== undefined && selectedCategory !== null && selectedCategory.length !== 0  && 
+        selectedCategory !== undefined && selectedCategory !== null && Array.isArray(selectedCategory) && 
         selectedOperatingWt !== undefined && selectedOperatingWt !== null && selectedOperatingWt.length === 2 && 
         selectedEngineHP !== undefined && selectedEngineHP !== null && selectedEngineHP.length === 2
         )
@@ -76,7 +77,7 @@ const Home = () => {
   };
 
   const onRefresh = () => {
-    GetNewScrape(setScrapeData)
+    GetNewScrape(setScrapeData,setAlert)
   };
 
   const getDozerList = ()=>{
@@ -87,6 +88,16 @@ const Home = () => {
   }
 
   return (
+    <>
+    {alert && (
+      <Alert
+        message={alert.message}
+        type={alert.type}
+        showIcon
+        closable
+        onClose={() => setAlert(null)}
+      />
+    )}
     <Layout>
       <Content style={{ padding: '50px' }}>
         <Row>
@@ -99,6 +110,7 @@ const Home = () => {
         </Row>
       </Content>
     </Layout>
+    </>
   );
 
 

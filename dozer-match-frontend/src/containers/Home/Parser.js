@@ -14,28 +14,38 @@ import axios from 'axios'
     })
 }
 
-const GetScrape = async (setScrapeData) => {
+const GetScrape = async (setScrapeData,setAlert) => {
     try {
+      setAlert({ message: 'Fetching Old Scrape', type: 'info' });
       const response = await axios.get('http://localhost:8002/scrape');
-      if(response.status === 200){
+      if(response.status === 200 && response.data.length > 0 ){
+        setAlert({ message: 'Fetched Old Scrape ', type: 'success' });
         setScrapeData(Parse(response.data))
         return;
       }else {
-        await GetNewScrape()
+        setAlert({ message: 'No existing scrape found trying to fetch new scrape', type: 'info' });
+        await GetNewScrape(setScrapeData,setAlert)
       }
     } catch (error) {
       console.error(error);
+      setAlert({ message: 'No existing scrape found trying to fetch new scrape', type: 'info' });
+      await GetNewScrape(setScrapeData,setAlert)
     }
   };
   
-  const GetNewScrape = async (setScrapeData) => {
+  const GetNewScrape = async (setScrapeData , setAlert) => {
     try {
+      setAlert({ message: 'New scrape Started ', type: 'success' });
       const response = await axios.post('http://localhost:8002/scrape');
-      if(response.status ===200){
+      if(response.status ===200 && response.data.length>0){
+        setAlert({ message: 'New Scrape Successful updated data and form', type: 'success' });
         setScrapeData(Parse(response.data))
         return
+      }else {
+        setAlert({ message: 'Scrape Failed Plz try again', type: 'warn' });
       }
     } catch (error) {
+      setAlert({ message: 'Scrape Failed Plz try again', type: 'error' });
       console.error(error);
     }
   };
@@ -92,8 +102,7 @@ const GetScrape = async (setScrapeData) => {
     setMaxOperatingWT(maxOperatingWT)
 
     setCategory(newCategory)
-   setSelectedCategory(...selectedCategory.filter(c=> newCategory.includes(c) ))
-
+    setSelectedCategory(...selectedCategory.filter(c=> newCategory.includes(c) ))
    setSelectedOperatingWt(...[minOperatingWT<=selectedOperatingWt[0]<=maxOperatingWT?selectedOperatingWt[0]:minOperatingWT,
     minOperatingWT<=selectedOperatingWt[1]<=maxOperatingWT?selectedOperatingWt[1]:maxOperatingWT,
   ])
@@ -112,6 +121,7 @@ const GetScrape = async (setScrapeData) => {
   }
 
   const FilterData = (data,selectedCategory,selectedOperatingWt,selectedEngineHP) => {
+    console.log(selectedCategory)
     var hpRange = (parseInt(selectedEngineHP[0])<=parseInt(data.hp)) && ((parseInt(data.hp) <=parseInt(selectedEngineHP[1])))
     var opWt = (parseInt(selectedOperatingWt[0])<=parseInt(data.weight)) && ((parseInt(data.weight) <=parseInt(selectedOperatingWt[1])))
     if(selectedCategory.includes(data.category) && hpRange && opWt){
