@@ -61,7 +61,11 @@ func (c catScraper) ScrapePage(ctx context.Context) ([]entity.BullDozer, error) 
 
 func (c catScraper) scrapeSinglePage(ctx context.Context, page *rod.Page, i int) ([]*entity.BullDozer, error) {
 	// Navigate to a URL
-	page.MustNavigate("https://www.cat.com/en_US/products/new/equipment/dozers.html?page=" + strconv.Itoa(i))
+	err := page.Navigate("https://www.cat.com/en_US/products/new/equipment/dozers.html?page=" + strconv.Itoa(i))
+
+	if err != nil {
+		return nil, err
+	}
 
 	waitDuration := time.Minute
 	time.Sleep(waitDuration)

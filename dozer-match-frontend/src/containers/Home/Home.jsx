@@ -81,7 +81,8 @@ const Home = () => {
 
   const getDozerList = ()=>{
     return <Row>
-      <DozerList xs={24} md={12} lg={12} cardData={displayData}/>
+         <DozerList cardData={displayData}/>
+
     </Row>
   }
 

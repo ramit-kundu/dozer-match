@@ -1,13 +1,18 @@
 import React from 'react';
 import Dozer from '../../components/Dozer/Dozer';
-
+import {  Col } from 'antd';
 const DozerList = ({cardData}) => {
   return (
-    <div className="card-list">
+    <>
       {cardData.map((card) => (
-        <Dozer key={card.id} {...card} />
+        <Col  lg={12}>
+              <div className="card-list">
+          <Dozer key={card.id} {...card} />
+          </div>
+        </Col>
+        
       ))}
-    </div>
+</>
   );
 };
 

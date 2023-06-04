@@ -86,14 +86,16 @@ func (d dozerService) StartScrape(ctx context.Context, scrapeIndex string) ([]en
 
 	dozers, err := d.scraper.ScrapePage(ctx)
 
+	if err != nil {
+		d.cache.Remove("catdotcom")
+		d.cache.Remove(scrapeIndex)
+		return nil, err
+	}
+
 	for i := 0; i < len(dozers); i++ {
 		dozers[i].ScrapeIndex = scrapeIndex
 	}
 
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
 	d.repo.BulkCreate(ctx, dozers)
 
 	d.cache.Remove("catdotcom")
