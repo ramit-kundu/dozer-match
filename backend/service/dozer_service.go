@@ -42,6 +42,20 @@ func NewDozerService() DozerService {
 	}
 }
 
+func MakeNewDozerService(repo repository.BullDozerRepository, cache cache.Cache) DozerService {
+	var sc scraper.Scraper
+	if os.Getenv("USE_GPT") == "true" {
+		sc = catscraper.NewCatScraperGPT()
+	} else {
+		sc = catscraper.NewCatScraper()
+	}
+	return dozerService{
+		repo:    repo,
+		cache:   cache,
+		scraper: sc,
+	}
+}
+
 func (d dozerService) FetchById(ctx context.Context, scrapeIndex string) ([]entity.BullDozer, error) {
 	res, _ := d.cache.Get(scrapeIndex)
 
