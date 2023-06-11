@@ -107,5 +107,6 @@ func (d dozerService) StartScrape(ctx context.Context, scrapeIndex string) ([]en
 }
 
 func (d dozerService) Delete(ctx context.Context) error {
+	d.cache.FlushAll()
 	return d.repo.Delete(ctx)
 }

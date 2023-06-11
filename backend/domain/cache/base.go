@@ -12,6 +12,7 @@ type Cache interface {
 	Set(key string, value string, expiration time.Duration) error
 	Get(key string) (string, error)
 	Remove(key string)
+	FlushAll()
 }
 
 type cache struct {
@@ -50,4 +51,9 @@ func (c cache) Get(key string) (string, error) {
 func (c cache) Remove(key string) {
 	fmt.Println("redis : deleting key" + key)
 	c.client.Del(key)
+}
+
+func (c cache) FlushAll() {
+	fmt.Println("redis : flushing all keys")
+	c.client.FlushAll()
 }

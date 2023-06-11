@@ -42,7 +42,8 @@ func (r bullDozerRepository) Fetch(ctx context.Context, scrapeIndex string) ([]e
 }
 
 func (r bullDozerRepository) Delete(ctx context.Context) error {
-	err := r.db.Delete(&entity.BullDozer{}).Error
+	//gorm needs a where clause
+	err := r.db.Where("1 = 1").Delete(&entity.BullDozer{}, "").Error
 	if err != nil {
 		return err
 	}
