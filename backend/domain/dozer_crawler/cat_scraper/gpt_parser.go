@@ -36,6 +36,7 @@ func (g gptParser) Parse(ctx context.Context, html string) (*entity.BullDozer, e
 	// Create the HTTP request
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonPayload))
 	if err != nil {
+		fmt.Println("Error happened during creating gpt request" + err.Error())
 		return nil, err
 	}
 
@@ -47,6 +48,7 @@ func (g gptParser) Parse(ctx context.Context, html string) (*entity.BullDozer, e
 	client := http.DefaultClient
 	res, err := client.Do(req)
 	if err != nil {
+		fmt.Println("Error happened during sending gpt request" + err.Error())
 		return nil, err
 	}
 	defer res.Body.Close()
@@ -55,6 +57,7 @@ func (g gptParser) Parse(ctx context.Context, html string) (*entity.BullDozer, e
 	var result map[string]interface{}
 	err = json.NewDecoder(res.Body).Decode(&result)
 	if err != nil {
+		fmt.Println("Error happened during decoding gpt request" + err.Error())
 		return nil, err
 	}
 	choices := result["choices"].([]interface{})

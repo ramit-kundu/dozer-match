@@ -37,6 +37,7 @@ func (c catScraper) ScrapePage(ctx context.Context) ([]entity.BullDozer, error) 
 	launcher := launcher.New()
 	url, err := launcher.Launch()
 	if err != nil {
+		fmt.Println("Error happened during launching rod scraper" + err.Error())
 		return nil, err
 	}
 
@@ -50,7 +51,7 @@ func (c catScraper) ScrapePage(ctx context.Context) ([]entity.BullDozer, error) 
 	for i := 1; i < 2; i++ {
 		res, err := c.scrapeSinglePage(ctx, page, i)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("Error happened during scraping" + err.Error())
 			continue
 		}
 		dozers = append(dozers, res...)
@@ -64,6 +65,7 @@ func (c catScraper) scrapeSinglePage(ctx context.Context, page *rod.Page, i int)
 	err := page.Navigate("https://www.cat.com/en_US/products/new/equipment/dozers.html?page=" + strconv.Itoa(i))
 
 	if err != nil {
+		fmt.Println("Error happened during navigating to page" + err.Error())
 		return nil, err
 	}
 
@@ -73,6 +75,7 @@ func (c catScraper) scrapeSinglePage(ctx context.Context, page *rod.Page, i int)
 	// Extract page HTML
 	html, err := page.HTML()
 	if err != nil {
+		fmt.Println("Error happened during extracting page html" + err.Error())
 		return nil, err
 	}
 	return c.parser.ParseModule(ctx, html)

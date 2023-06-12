@@ -21,7 +21,7 @@ func (m manualParser) Parse(ctx context.Context, html string) (*entity.BullDozer
 
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("error happened during reading document" + err.Error())
 		return nil, err
 	}
 

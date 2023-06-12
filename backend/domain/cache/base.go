@@ -30,6 +30,7 @@ func (c cache) Set(key string, value string, expiration time.Duration) error {
 
 	err := c.client.Set(key, value, expiration).Err()
 	if err != nil {
+		fmt.Println("Some error happened while setting key" + key + "with value" + value + err.Error())
 		return err
 	}
 	return nil
@@ -42,6 +43,7 @@ func (c cache) Get(key string) (string, error) {
 	if err == redis.Nil {
 		return "", nil
 	} else if err != nil {
+		fmt.Println("Some error happened while getting redis key" + key + err.Error())
 		return "", err
 	}
 
