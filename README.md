@@ -59,6 +59,9 @@ Frontend fetches the latest scrape when its first loaded and displays it along w
 We  can request new scrape by hitting rescrape. 
 
 
+Video : https://share.vidyard.com/watch/datTivB4SSLBxWA9UrapUV?
+
+
 
 
 
