@@ -35,6 +35,7 @@ func (c modularizer) ParseModule(ctx context.Context, html string) ([]*entity.Bu
 
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 	if err != nil {
+		fmt.Println("error happened while extracting document" + err.Error())
 		return nil, err
 	}
 
@@ -43,6 +44,7 @@ func (c modularizer) ParseModule(ctx context.Context, html string) ([]*entity.Bu
 	doc.Find("div.card-wrapper").Each(func(i int, s *goquery.Selection) {
 		outerHTML, err := s.Html()
 		if err != nil {
+			fmt.Println("error happened while getting html" + err.Error())
 			return
 		}
 		cardWrappers = append(cardWrappers, outerHTML)
@@ -51,7 +53,7 @@ func (c modularizer) ParseModule(ctx context.Context, html string) ([]*entity.Bu
 	for i := 0; i < len(cardWrappers); i++ {
 		dozer, err := c.parser.Parse(ctx, cardWrappers[i])
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("error happened while parsing chunk of html" + err.Error())
 			continue
 		}
 		dozers = append(dozers, dozer)
