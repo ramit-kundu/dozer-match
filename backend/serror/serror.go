@@ -14,6 +14,7 @@ type Serror interface {
 type serror struct {
 	err   error
 	stack []byte
+	code  int
 }
 
 // GetError returns the underlying error.
@@ -22,10 +23,11 @@ func (s *serror) GetError() error {
 }
 
 // NewSerror creates a new instance of Serror.
-func NewSerror(err error) Serror {
+func NewSerror(err error, code int) Serror {
 	fmt.Printf("Error: %v\nStack Trace:\n%s\n", err, debug.Stack()) //log error with stacktrace during conversion
 	return &serror{
 		err:   err,
 		stack: debug.Stack(),
+		code:  code,
 	}
 }
